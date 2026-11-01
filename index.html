@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>퀘스트 라이프 - 현실 RPG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="profile">
+    <div id="title" class="ptitle">칭호 없음</div>
+    <div class="nick">
+      <input id="nick" maxlength="12" aria-label="닉네임">
+      <span>Lv.<b id="lv">1</b></span>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <small><span id="expNow">0</span> / <span id="expNeed">100</span> (다음 레벨까지) · 보유 EXP <b id="bal">0</b> · 누적 <b id="tot">0</b></small>
+  </div>
+  <nav>
+    <button data-p="home" class="on">대시보드</button>
+    <button data-p="quests">퀘스트</button>
+    <button data-p="read">독서</button>
+    <button data-p="gacha">뽑기</button>
+    <button data-p="dex">도감</button>
+    <button data-p="stats">통계</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="page on">
+    <div class="card"><h2>오늘의 퀘스트</h2><div id="todayList"></div></div>
+    <div class="card"><h2>최근 획득 칭호</h2><div id="recent"></div><p>수집률 <b id="rate0">0%</b></p></div>
+    <div class="card"><h2>AI 공부 퀴즈</h2><p class="warn">⚠ 미구현: 사진 분석은 API 키를 숨길 서버가 필요해서 이 버전에는 없습니다.</p></div>
+  </section>
+
+  <section id="quests" class="page">
+    <div class="card">
+      <h2>퀘스트 만들기</h2>
+      <input id="qt" placeholder="퀘스트 제목">
+      <select id="qc"><option>공부</option><option>독서</option><option>운동</option><option>자기계발</option><option>자유 미션</option></select>
+      <select id="qd"><option value="1">쉬움 (+10)</option><option value="2">보통 (+20)</option><option value="4">어려움 (+40)</option></select>
+      <select id="qk"><option value="daily">일일</option><option value="weekly">주간</option><option value="long">장기</option></select>
+      <button id="qadd" class="gold">추가</button>
+    </div>
+    <div class="card"><h2>퀘스트 목록</h2><div id="qlist"></div></div>
+  </section>
+
+  <section id="read" class="page">
+    <div class="card">
+      <h2>독서 타이머</h2>
+      <input id="book" placeholder="책 제목">
+      <input id="goal" type="number" min="1" value="30"> 분 목표
+      <div id="clock">00:00</div>
+      <button id="rs" class="gold">시작</button>
+      <button id="rp">일시정지</button>
+      <button id="re">종료 · 보상</button>
+      <p><small>10분당 10 EXP, 목표 달성 시 +20 EXP. 종료 후 같은 기록은 재사용 불가.</small></p>
+    </div>
+    <div class="card"><h2>독서 기록</h2><div id="rlog"></div></div>
+  </section>
+
+  <section id="gacha" class="page">
+    <div class="card center">
+      <h2>칭호 뽑기</h2>
+      <p>1회 <b id="cost">100</b> EXP · 보유 <b id="bal2">0</b></p>
+      <button id="g1" class="gold">1회 뽑기</button>
+      <button id="g10" class="gold">10회 뽑기</button>
+      <div id="result"></div>
+      <small id="odds"></small>
+    </div>
+  </section>
+
+  <section id="dex" class="page">
+    <div class="card"><h2>칭호 도감 <span id="rate"></span></h2><div id="grid"></div></div>
+  </section>
+
+  <section id="stats" class="page">
+    <div class="card"><h2>통계</h2><div id="statbox"></div></div>
+  </section>
+</main>
+
+<div id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
