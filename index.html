@@ -20,6 +20,7 @@
   <nav>
     <button data-p="home" class="on">대시보드</button>
     <button data-p="quests">퀘스트</button>
+    <button data-p="quiz">퀴즈</button>
     <button data-p="read">독서</button>
     <button data-p="gacha">뽑기</button>
     <button data-p="dex">도감</button>
@@ -31,7 +32,7 @@
   <section id="home" class="page on">
     <div class="card"><h2>오늘의 퀘스트</h2><div id="todayList"></div></div>
     <div class="card"><h2>최근 획득 칭호</h2><div id="recent"></div><p>수집률 <b id="rate0">0%</b></p></div>
-    <div class="card"><h2>AI 공부 퀴즈</h2><p class="warn">⚠ 미구현: 사진 분석은 API 키를 숨길 서버가 필요해서 이 버전에는 없습니다.</p></div>
+    <div class="card"><h2>AI 공부 퀴즈</h2><p>사진으로 퀴즈를 만들고 EXP를 받아요.</p><button class="gold" onclick="document.querySelector('[data-p=quiz]').click()">퀴즈 풀러 가기</button></div>
   </section>
 
   <section id="quests" class="page">
@@ -44,6 +45,19 @@
       <button id="qadd" class="gold">추가</button>
     </div>
     <div class="card"><h2>퀘스트 목록</h2><div id="qlist"></div></div>
+  </section>
+
+  <section id="quiz" class="page">
+    <div class="card">
+      <h2>AI 공부 퀴즈</h2>
+      <input id="qfile" type="file" accept="image/*">
+      <select id="qn"><option>3</option><option selected>5</option><option>10</option></select> 문제
+      <button id="qgo" class="gold">퀴즈 만들기</button>
+      <p id="qmsg"></p>
+      <small>참여 5 EXP + 정답당 10 EXP + 만점 20 EXP</small>
+    </div>
+    <div class="card" id="qplay" hidden></div>
+    <div class="card"><h2>학습 기록</h2><div id="qhist"></div></div>
   </section>
 
   <section id="read" class="page">
