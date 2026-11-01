@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 JSON만 출력:
 {"questions":[{"type":"mc|ox|short","q":"문제","choices":["..."],"answer":"정답","explain":"해설"}]}`;
     const r = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
       {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
