@@ -142,7 +142,7 @@ $('#qgo').onclick=async()=>{
   const d=await r.json();
   if(d.error==='unreadable'){msg.textContent='글자가 잘 안 보여요. 밝고 선명하게 다시 찍어 올려 주세요.';return}
   const qs=(d.questions||[]).map(clean).filter(Boolean);
-  if(!r.ok||!qs.length){msg.textContent='퀴즈를 만들지 못했어요. 잠시 후 다시 시도해 주세요.';return}
+  if(!r.ok||!qs.length){msg.textContent='퀴즈를 만들지 못했어요. '+(d.detail||(r.ok?'AI가 만든 문제가 검증을 통과하지 못했어요. 다시 시도해 주세요.':''));return}
   msg.textContent='';startQuiz(qs,false);
  }catch(e){msg.textContent='서버 연결 실패. Vercel에 배포한 주소에서만 AI가 작동해요.'}
  finally{$('#qgo').disabled=false}
