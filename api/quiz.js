@@ -7,9 +7,9 @@ export default async function handler(req, res) {
     const { image, mediaType, count = 5 } = req.body;
     const prompt = `사진 속 학습 내용만 근거로 퀴즈 ${count}개를 만들어. 사진에 없는 사실은 절대 만들지 마.
 글자를 읽기 어렵다면 {"error":"unreadable"} 만 출력해.
-객관식(mc)은 choices 중 하나와 answer가 글자까지 똑같아야 해. OX(ox)의 answer는 O 또는 X.
+문제는 객관식(mc)과 OX(ox)만 만들고, 단답형·주관식은 절대 만들지 마. 객관식(mc)은 보기(choices)를 4개로 하고 answer가 choices 중 하나와 글자까지 똑같아야 해. OX(ox)의 answer는 O 또는 X.
 JSON만 출력:
-{"questions":[{"type":"mc|ox|short","q":"문제","choices":["..."],"answer":"정답","explain":"해설"}]}`;
+{"questions":[{"type":"mc|ox","q":"문제","choices":["..."],"answer":"정답","explain":"해설"}]}`;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 50000);
     const r = await fetch(
