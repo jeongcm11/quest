@@ -1,3 +1,23 @@
+// 응답에서 첫 번째 완성된 JSON 객체만 꺼냄 (뒤에 붙은 글자는 무시)
+function firstJson(t) {
+  const start = t.indexOf('{');
+  if (start < 0) return null;
+  let depth = 0, inStr = false, esc = false;
+  for (let i = start; i < t.length; i++) {
+    const c = t[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') inStr = true;
+    else if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) return t.slice(start, i + 1); }
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.GEMINI_API_KEY) {
@@ -30,11 +50,11 @@ JSON만 출력:
       return res.status(500).json({ error: 'failed', detail: 'Gemini 오류 ' + r.status + ': ' + String(d.error?.message || '').slice(0, 200) });
     }
     const raw = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const m = raw.match(/\{[\s\S]*\}/);
+    const m = firstJson(raw);
     if (!m) {
       return res.status(500).json({ error: 'failed', detail: 'AI 응답이 비었거나 형식이 달라요.' + (d.promptFeedback?.blockReason ? ' (차단: ' + d.promptFeedback.blockReason + ')' : '') });
     }
-    res.status(200).json(JSON.parse(m[0]));
+    res.status(200).json(JSON.parse(m));
   } catch (e) {
     res.status(500).json({ error: 'failed', detail: e.name === 'AbortError' ? 'AI 응답이 너무 오래 걸려요. 문제 수를 줄이거나 글씨가 큰 사진으로 다시 시도해 주세요.' : '처리 중 오류: ' + e.message });
   }
