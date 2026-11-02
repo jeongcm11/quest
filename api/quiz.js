@@ -13,14 +13,14 @@ JSON만 출력:
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 50000);
     const r = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
       {
         method: 'POST',
         signal: ctrl.signal,
         headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
         body: JSON.stringify({
           contents: [{ parts: [{ inline_data: { mime_type: mediaType, data: image } }, { text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } }
+          generationConfig: { responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'minimal' } }
         })
       }
     );
