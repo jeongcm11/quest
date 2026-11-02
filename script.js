@@ -135,7 +135,7 @@ function clean(q){
 }
 $('#qgo').onclick=async()=>{
  const f=$('#qfile').files[0];if(!f)return toast('사진을 선택하세요');
- const msg=$('#qmsg');msg.textContent='AI가 사진을 분석하는 중... (최대 30초)';$('#qgo').disabled=true;
+ const msg=$('#qmsg');msg.textContent='AI가 사진을 분석하는 중... (최대 10분)';$('#qgo').disabled=true;
  try{
   const r=await fetch('/api/quiz',{method:'POST',headers:{'content-type':'application/json'},
    body:JSON.stringify({image:await shrink(f),mediaType:'image/jpeg',count:+$('#qn').value})});
