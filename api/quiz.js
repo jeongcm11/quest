@@ -20,7 +20,7 @@ JSON만 출력:
         headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
         body: JSON.stringify({
           contents: [{ parts: [{ inline_data: { mime_type: mediaType, data: image } }, { text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' }
+          generationConfig: { responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } }
         })
       }
     );
