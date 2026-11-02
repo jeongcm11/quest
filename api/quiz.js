@@ -10,10 +10,13 @@ export default async function handler(req, res) {
 객관식(mc)은 choices 중 하나와 answer가 글자까지 똑같아야 해. OX(ox)의 answer는 O 또는 X.
 JSON만 출력:
 {"questions":[{"type":"mc|ox|short","q":"문제","choices":["..."],"answer":"정답","explain":"해설"}]}`;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 50000);
     const r = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
       {
         method: 'POST',
+        signal: ctrl.signal,
         headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
         body: JSON.stringify({
           contents: [{ parts: [{ inline_data: { mime_type: mediaType, data: image } }, { text: prompt }] }],
@@ -22,6 +25,7 @@ JSON만 출력:
       }
     );
     const d = await r.json();
+    clearTimeout(timer);
     if (!r.ok) {
       return res.status(500).json({ error: 'failed', detail: 'Gemini 오류 ' + r.status + ': ' + String(d.error?.message || '').slice(0, 200) });
     }
@@ -32,6 +36,6 @@ JSON만 출력:
     }
     res.status(200).json(JSON.parse(m[0]));
   } catch (e) {
-    res.status(500).json({ error: 'failed', detail: '처리 중 오류: ' + e.message });
+    res.status(500).json({ error: 'failed', detail: e.name === 'AbortError' ? 'AI 응답이 너무 오래 걸려요. 문제 수를 줄이거나 글씨가 큰 사진으로 다시 시도해 주세요.' : '처리 중 오류: ' + e.message });
   }
 }
