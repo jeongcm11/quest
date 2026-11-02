@@ -4,7 +4,7 @@ const GRADES=[
  {n:'희귀',p:15,t:['불굴의 의지','집중의 달인','지식의 탐구자','시간의 지배자']},
  {n:'영웅',p:7,t:['노력의 화신','무한한 가능성','지식의 수호자','한계를 넘은 자']},
  {n:'전설',p:2.5,t:['전설의 개척자','운명을 개척한 자','불멸의 의지','초월자']},
- {n:'신화',p:0.5,t:['현실의 지배자','절대적인 존재','무한의 초월자','선택받은 자']}
+ {n:'신화',p:0.5,t:['현실의 지배자','절대적인 존재','꿈을 이룬 자','선택받은 자']}
 ];
 const COST=100, KEY='questlife_v1';
 const $=s=>document.querySelector(s);
@@ -135,16 +135,17 @@ function clean(q){
 }
 $('#qgo').onclick=async()=>{
  const f=$('#qfile').files[0];if(!f)return toast('사진을 선택하세요');
- const msg=$('#qmsg');msg.textContent='AI가 사진을 분석하는 중... (최대 10분)';$('#qgo').disabled=true;
+ const msg=$('#qmsg');msg.textContent='AI가 사진을 분석하는 중... (최대 30초)';$('#qgo').disabled=true;
  try{
-  const r=await fetch('/api/quiz',{method:'POST',headers:{'content-type':'application/json'},
+  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),65000);
+  const r=await fetch('/api/quiz',{method:'POST',signal:ctrl.signal,headers:{'content-type':'application/json'},
    body:JSON.stringify({image:await shrink(f),mediaType:'image/jpeg',count:+$('#qn').value})});
-  const d=await r.json();
+  clearTimeout(timer);const d=await r.json();
   if(d.error==='unreadable'){msg.textContent='글자가 잘 안 보여요. 밝고 선명하게 다시 찍어 올려 주세요.';return}
   const qs=(d.questions||[]).map(clean).filter(Boolean);
   if(!r.ok||!qs.length){msg.textContent='퀴즈를 만들지 못했어요. '+(d.detail||(r.ok?'AI가 만든 문제가 검증을 통과하지 못했어요. 다시 시도해 주세요.':''));return}
   msg.textContent='';startQuiz(qs,false);
- }catch(e){msg.textContent='서버 연결 실패. Vercel에 배포한 주소에서만 AI가 작동해요.'}
+ }catch(e){msg.textContent=e.name==='AbortError'?'AI 응답이 너무 오래 걸려요. 문제 수를 줄이거나 글씨가 큰 사진으로 다시 시도해 주세요.':'서버 연결 실패. 주소(https://quest-nine-tawny.vercel.app)로 접속했는지 확인해 주세요.'}
  finally{$('#qgo').disabled=false}
 };
 function startQuiz(qs,retry){Q={qs,i:0,res:[],retry:!!retry,fb:false};showQ()}
