@@ -131,7 +131,7 @@ function clean(q){
   const i=q.choices.findIndex(c=>norm(c)===norm(a));
   return i<0?null:{...q,answer:q.choices[i]};
  }
- return {...q,type:'short',answer:a};
+ return null; // 단답형은 사용하지 않음
 }
 $('#qgo').onclick=async()=>{
  const f=$('#qfile').files[0];if(!f)return toast('사진을 선택하세요');
